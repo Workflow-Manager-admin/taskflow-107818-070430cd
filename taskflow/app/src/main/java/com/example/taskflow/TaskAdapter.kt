@@ -22,11 +22,11 @@ class TaskAdapter(
 
     // PUBLIC_INTERFACE
     inner class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val checkbox: CheckBox = view.findViewById(R.id.cb_task_completed)
-        val title: TextView = view.findViewById(R.id.tv_task_title)
-        val desc: TextView = view.findViewById(R.id.tv_task_desc)
-        val editBtn: ImageButton = view.findViewById(R.id.btn_edit)
-        val deleteBtn: ImageButton = view.findViewById(R.id.btn_delete)
+        val checkbox: CheckBox? = view.findViewById(R.id.cb_task_completed)
+        val title: TextView? = view.findViewById(R.id.tv_task_title)
+        val desc: TextView? = view.findViewById(R.id.tv_task_desc)
+        val editBtn: ImageButton? = view.findViewById(R.id.btn_edit)
+        val deleteBtn: ImageButton? = view.findViewById(R.id.btn_delete)
     }
 
     // PUBLIC_INTERFACE
@@ -41,22 +41,24 @@ class TaskAdapter(
 
     // PUBLIC_INTERFACE
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+        // Defensive safety
+        if (position >= tasks.size || position < 0) return
         val task = tasks[position]
-        holder.title.text = task.title
-        holder.desc.text = task.description
-        holder.checkbox.isChecked = task.isCompleted
 
-        holder.editBtn.setOnClickListener { onEdit(task) }
-        holder.deleteBtn.setOnClickListener { onDelete(task) }
-        holder.checkbox.setOnCheckedChangeListener(null)
-        holder.checkbox.isChecked = task.isCompleted
-        holder.checkbox.setOnCheckedChangeListener { _, _ -> onToggleComplete(task) }
+        holder.title?.text = task.title
+        holder.desc?.text = task.description
+        holder.checkbox?.setOnCheckedChangeListener(null)
+        holder.checkbox?.isChecked = task.isCompleted
+        holder.checkbox?.setOnCheckedChangeListener { _, _ -> onToggleComplete(task) }
+
+        holder.editBtn?.setOnClickListener { onEdit(task) }
+        holder.deleteBtn?.setOnClickListener { onDelete(task) }
 
         // Visual distinction for completed tasks
         if (task.isCompleted) {
-            holder.title.paintFlags = holder.title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            holder.title?.paintFlags = holder.title?.paintFlags?.or(Paint.STRIKE_THRU_TEXT_FLAG) ?: 0
         } else {
-            holder.title.paintFlags = holder.title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            holder.title?.paintFlags = holder.title?.paintFlags?.and(Paint.STRIKE_THRU_TEXT_FLAG.inv()) ?: 0
         }
     }
 

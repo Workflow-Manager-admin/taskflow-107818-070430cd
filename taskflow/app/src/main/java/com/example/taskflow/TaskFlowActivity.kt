@@ -24,16 +24,24 @@ class TaskFlowActivity : AppCompatActivity() {
 
         val pendingRecyclerView = findViewById<RecyclerView>(R.id.rv_pending)
         val completedRecyclerView = findViewById<RecyclerView>(R.id.rv_completed)
+        val fabAddTask = findViewById<FloatingActionButton>(R.id.fab_add_task)
+
+        // Defensive null check for views
+        if (pendingRecyclerView == null || completedRecyclerView == null || fabAddTask == null) {
+            Toast.makeText(this, "Error loading key components. Please restart the app.", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
 
         pendingAdapter = TaskAdapter(
-            { task -> editTask(task) },
-            { task -> deleteTask(task) },
-            { task -> toggleTaskCompleted(task) }
+            { task -> if (task != null) editTask(task) },
+            { task -> if (task != null) deleteTask(task) },
+            { task -> if (task != null) toggleTaskCompleted(task) }
         )
         completedAdapter = TaskAdapter(
-            { task -> editTask(task) },
-            { task -> deleteTask(task) },
-            { task -> toggleTaskCompleted(task) }
+            { task -> if (task != null) editTask(task) },
+            { task -> if (task != null) deleteTask(task) },
+            { task -> if (task != null) toggleTaskCompleted(task) }
         )
         pendingRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@TaskFlowActivity)
@@ -44,7 +52,7 @@ class TaskFlowActivity : AppCompatActivity() {
             adapter = completedAdapter
         }
 
-        findViewById<FloatingActionButton>(R.id.fab_add_task).setOnClickListener {
+        fabAddTask.setOnClickListener {
             addTask()
         }
 
