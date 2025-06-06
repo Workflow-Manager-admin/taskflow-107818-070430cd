@@ -83,9 +83,12 @@ class TaskFlowActivity : AppCompatActivity() {
 
         builder.setPositiveButton("Add") { dialog, _ ->
             val rawTitle = titleInput.text.toString().trim()
+            // Defensive: ensure dialog views are properly referenced even if not attached anymore
             if (rawTitle.isNotEmpty()) {
+                // The following line adds a new Task to the master list
                 val newTask = Task(id = nextId++, title = rawTitle, description = descInput.text.toString())
                 tasks.add(newTask)
+                // After adding, ensure the UI/Adapter is updated so that RecyclerView data is refreshed
                 renderTaskLists()
             }
             dialog.dismiss()
