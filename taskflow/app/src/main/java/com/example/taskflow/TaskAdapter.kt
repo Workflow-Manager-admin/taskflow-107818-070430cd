@@ -36,6 +36,7 @@ class TaskAdapter(
         Log.d("TaskAdapter", "onCreateViewHolder called for viewType=$viewType")
         val v = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_task, parent, false)
+        Log.d("TaskAdapter", "Inflated item_task.xml for TaskViewHolder")
         // Visual debug: Tag or change something (border is set via XML, see layout file)
         return TaskViewHolder(v)
     }
