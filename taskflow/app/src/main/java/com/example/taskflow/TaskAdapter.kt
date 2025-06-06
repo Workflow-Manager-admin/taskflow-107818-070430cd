@@ -18,7 +18,8 @@ class TaskAdapter(
     val onToggleComplete: (Task) -> Unit
 ) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
-    private var tasks: List<Task> = listOf()
+    // Use a MutableList so internal update is possible for list changes in place (diffing)
+    private var tasks: MutableList<Task> = mutableListOf()
 
     // PUBLIC_INTERFACE
     inner class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -64,7 +65,8 @@ class TaskAdapter(
 
     // PUBLIC_INTERFACE
     fun submitList(list: List<Task>) {
-        tasks = list
+        // Defensive copy forces RecyclerView to rebind; avoids same-object reference bug
+        tasks = ArrayList(list)
         notifyDataSetChanged()
     }
 }
