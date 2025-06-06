@@ -88,6 +88,19 @@ class TaskFlowActivity : AppCompatActivity() {
                 // The following line adds a new Task to the master list
                 val newTask = Task(id = nextId++, title = rawTitle, description = descInput.text.toString())
                 tasks.add(newTask)
+
+                // Diagnostic: Show info about pending tasks after add, before UI refresh
+                val pendingTasks = tasks.filter { !it.isCompleted }
+                android.widget.Toast.makeText(
+                    this,
+                    "Pending tasks count: ${pendingTasks.size}\nPending titles: ${pendingTasks.joinToString { it.title }}",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+                android.util.Log.d(
+                    "TaskFlow",
+                    "Pending tasks (after add): count=${pendingTasks.size} titles=${pendingTasks.joinToString { it.title }}"
+                )
+
                 // After adding, ensure the UI/Adapter is updated so that RecyclerView data is refreshed
                 renderTaskLists()
             }
