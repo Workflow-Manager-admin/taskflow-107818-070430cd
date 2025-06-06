@@ -1,6 +1,7 @@
 package com.example.taskflow
 
 import android.graphics.Paint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,8 +33,10 @@ class TaskAdapter(
 
     // PUBLIC_INTERFACE
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
+        Log.d("TaskAdapter", "onCreateViewHolder called for viewType=$viewType")
         val v = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_task, parent, false)
+        // Visual debug: Tag or change something (border is set via XML, see layout file)
         return TaskViewHolder(v)
     }
 
@@ -42,9 +45,14 @@ class TaskAdapter(
 
     // PUBLIC_INTERFACE
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+        Log.d("TaskAdapter", "onBindViewHolder called for position=$position (itemCount=$itemCount)")
         // Defensive safety
-        if (position >= tasks.size || position < 0) return
+        if (position >= tasks.size || position < 0) {
+            Log.e("TaskAdapter", "onBindViewHolder: Invalid position $position, list size=${tasks.size}")
+            return
+        }
         val task = tasks[position]
+        Log.d("TaskAdapter", "Binding task at $position: $task")
 
         holder.title?.text = task.title
         holder.desc?.text = task.description
@@ -61,6 +69,7 @@ class TaskAdapter(
         } else {
             holder.title?.paintFlags = holder.title?.paintFlags?.and(Paint.STRIKE_THRU_TEXT_FLAG.inv()) ?: 0
         }
+        // Diagnostic: border/background is set in layout XML now for visual confirmation
     }
 
     // PUBLIC_INTERFACE
